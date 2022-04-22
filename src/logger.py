@@ -36,7 +36,8 @@ def run():
             used_ram = 0
             free_ram = 0
         data = []
-        for service in services_result:
+        services_json = json.loads(services_result)
+        for service in services_json:
             """ Data structure: [ service_id, service_name, service_port, service_uptime, used_ram, total_used_ram, processor_used, datetime ] """
             now = datetime.now().astimezone(pytz.timezone('America/Lima')).timestamp()
             service_name = str(service["name"]).split(':')
