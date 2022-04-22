@@ -39,8 +39,8 @@ def run():
         for service in services_result:
             """ Data structure: [ service_id, service_name, service_port, service_uptime, used_ram, total_used_ram, processor_used, datetime ] """
             now = datetime.now().astimezone(pytz.timezone('America/Lima')).timestamp()
-            name, port = str(service["name"]).split(':')
-            data.append([service["pm_id"],name,port,service["pm2_env"]["pm_uptime"],service["monit"]["memory"],total_ram,used_ram,free_ram,service["monit"]["cpu"],int(now)])
+            service_name = str(service["name"]).split(':')
+            data.append([service["pm_id"],service_name[0],service_name[1],service["pm2_env"]["pm_uptime"],service["monit"]["memory"],total_ram,used_ram,free_ram,service["monit"]["cpu"],int(now)])
         df = pd.DataFrame(data)
         df.to_csv(csv_path, mode='a', index=False, header=False)
 
