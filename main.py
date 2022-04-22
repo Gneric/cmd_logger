@@ -1,32 +1,25 @@
 if __name__ == '__main__':
-    import os
-    from os.path import exists
-    ram_logpath = './ram_log.txt'
-    pm2_logpath = './pm2_log.txt'
+    from apscheduler.schedulers.background import BlockingScheduler
+    from apscheduler.triggers.cron import CronTrigger
+    from apscheduler.triggers.interval import IntervalTrigger
+    from apscheduler.triggers.combining import AndTrigger    
+    from config.config import cron_hour, cron_minute, cron_second
 
-    def log(filepath, cmd):
-        try:
-            os_result = os.system(cmd)
-        except:
-            os_result = ""
-        from datetime import datetime
-        import pytz
-        timestamp = datetime.now().astimezone(pytz.timezone('America/Bogota'))
-        with open(filepath, 'a') as f:
-            f.write(str(timestamp) + '\n')
-            f.write(str(os_result) + '\n' )
+    from src.logger import run
 
-    def log_all():
-        log(ram_logpath, 'free -h -t')
-        log(pm2_logpath, 'pm2 ls')
-
-    def create_files():
-        f = open(ram_logpath, 'w')
-        r = open(pm2_logpath, 'w')
-
-    if exists(ram_logpath):
-        log_all()
-    else:
-        create_files()
-        log_all()
-
+    print('Waiting ... ')
+    sched = BlockingScheduler()
+    print('Scheduler created')
+    
+    custom_trigger = AndTrigger([CronTrigger(hour=cron_hour, minute=cron_minute, second=cron_second)])
+    print('Creating job')
+    @sched.scheduled_job(trigger=custom_trigger)
+    def main():
+        run()
+    
+    print('Starting scheduler')
+    try:
+        sched.start()
+    except(KeyboardInterrupt, SystemError):
+            pass
+            print('Stopped')
