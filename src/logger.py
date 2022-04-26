@@ -5,9 +5,8 @@ def run():
     
     year = datetime.now().year
     month = datetime.now().month
-    day = datetime.now().day
 
-    csv_path = f'./data/{year}_{month}_{day}_service_log.csv'
+    csv_path = f'./data/{year}_{month}_service_log.csv'
 
     """ Creacion de archivos """
     if exists(csv_path) == False:
@@ -21,11 +20,12 @@ def run():
         ramcheck_result = os.popen('free -t').read()
         try:
             splitted = ramcheck_result.split("\n")
+            print(f'{splitted=}')
             total_stuff : list = []
             for row in splitted:
-                allvalue = []
                 values = str(row).strip().split(' ')
                 values = list(filter(None, values))
+                print(f'{values=}')
                 total_stuff.append(values)
             ram_data = list(total_stuff[-1]).pop(0)
             total_ram = ram_data[0]
