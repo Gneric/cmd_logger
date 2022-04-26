@@ -25,7 +25,9 @@ def run():
                 values = str(row).strip().split(' ')
                 values = list(filter(None, values))
                 ram_data.append(values)
+            print(ram_data)
             ram_totals = list(ram_data[-2]).pop(0)
+            print(ram_totals)
             total_ram = ram_totals[0]
             used_ram = ram_totals[1]
             free_ram = ram_totals[2]
