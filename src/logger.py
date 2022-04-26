@@ -20,17 +20,15 @@ def run():
         ramcheck_result = os.popen('free -t').read()
         try:
             splitted = ramcheck_result.split("\n")
-            print(f'{splitted=}')
-            total_stuff : list = []
+            ram_data : list = []
             for row in splitted:
                 values = str(row).strip().split(' ')
                 values = list(filter(None, values))
-                print(f'{values=}')
-                total_stuff.append(values)
-            ram_data = list(total_stuff[-1]).pop(0)
-            total_ram = ram_data[0]
-            used_ram = ram_data[1]
-            free_ram = ram_data[2]
+                ram_data.append(values)
+            ram_totals = list(ram_data[-2]).pop(0)
+            total_ram = ram_totals[0]
+            used_ram = ram_totals[1]
+            free_ram = ram_totals[2]
         except:
             total_ram = 0
             used_ram = 0
@@ -44,6 +42,7 @@ def run():
             data.append([service["pm_id"],service_name[0],service_name[1],service["pm2_env"]["pm_uptime"],service["monit"]["memory"],total_ram,used_ram,free_ram,service["monit"]["cpu"],int(now)])
         df = pd.DataFrame(data)
         df.to_csv(csv_path, mode='a', index=False, header=False)
+        print('appended to csv')
 
     log_services()
             
